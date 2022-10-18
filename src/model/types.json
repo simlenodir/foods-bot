@@ -55,7 +55,6 @@
         "url": "https://media.istockphoto.com/photos/table-top-view-of-spicy-food-picture-id1316145932?b=1&k=20&m=1316145932&s=170667a&w=0&h=feyrNSTglzksHoEDSsnrG47UoY_XX4PtayUPpSMunQI=",
         "name": "Spagetti"
     },
-
     {
         "kitchName": "Fast foods 🍔",
         "price": 50000,
@@ -111,5 +110,12 @@
         "description": "Juda mazali",
         "url": "https://static8.depositphotos.com/1194063/892/i/950/depositphotos_8929411-stock-photo-seafood-on-ice.jpg",
         "name": "Kit-go'shtidan dimlama"
+    },
+    {
+        "kitchName": "Fast food",
+        "name": "doner",
+        "description": "Very taste and delicous",
+        "price": 30000,
+        "url": "https://media.istockphoto.com/photos/close-up-of-kebab-sandwich-picture-id851493796?k=20&m=851493796&s=612x612&w=0&h=jet3Ej7Is9w4KdnqixO4ApvvHfd8jlGGawzqI3CrsDQ="
     }
 ]

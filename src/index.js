@@ -1,6 +1,9 @@
 import dotenv from "dotenv"
 dotenv.config()
 
+import express from "express"
+import cors from "cors"
+
 import TelegramBot from "node-telegram-bot-api"
 import keyboard from "./helpers/keyboards/keyboards.info.js"
 import { read, write } from "./utils/FS.js"
@@ -10,13 +13,20 @@ import { askLocation } from "./handlers/askLocation.js"
 import { geo } from "./utils/geoFInder.js"
 import { getLocation } from "./handlers/getLocation.js"
 import { contactHandler } from "./handlers/contactHandler.js"
+import { errorHandleMiddleware } from "./middlewares/errorHandleiddleware.js"
+import { foodsValidation } from "./validation/validation.js"
+import { ErrorHandler } from "./Error/ErrorHandler.js"
 // import {foodsMenu} from "./helpers/keyboards/keyboards.info.js"
 
-const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true }, {
+const PORT = process.env.PORT || 8080
 
+const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true })
 
+const app = express()
 
-})
+app.use(express.json())
+app.use(cors())
+
 bot.on('error', console.log)
 
 bot.onText(/\/start/, msg => {
@@ -130,6 +140,41 @@ bot.on('callback_query',async location => {
    
 })
 
-// orderNameFun(bot, chatId, orderName, orderPrice)
+// from here I started backend logic codes
 
+app.use(errorHandleMiddleware)
+
+app.get("/foods", (_, res) => {
+    const allFoods = read("types.json")
+    res.json(allFoods)
+})
+
+app.get("/users", (_, res ) => {
+    const allUsers = read("users.json")
+
+    res.json(allUsers)
+})
+
+app.post("/newFood", async (req, res) => {
+    const {error, value} = foodsValidation.validate(req.body)
+    const {kitchName, name, description, price, url} = value
+
+    const allFoods =read("types.json")
+    allFoods.push({kitchName, name, description, price, url})
+
+const newFood = await write("types.json", allFoods)
+.catch(err => next(new ErrorHandler(error.message, 400)))
+
+if (newFood) {
+    res.json({
+        message: "new food created"
+    })
+}
+})
+
+app.all("/*", (_, res) => res.sendStatus(404))
+
+app.listen(8080, () => {
+    console.log("http://localhost:" + PORT);
+})
 
